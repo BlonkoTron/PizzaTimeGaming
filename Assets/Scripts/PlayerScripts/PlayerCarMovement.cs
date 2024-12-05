@@ -24,8 +24,6 @@ public class PlayerCarMovement : MonoBehaviour
     [SerializeField] private LayerMask drivable;
     [SerializeField] private Transform accelerationPoint;
 
-    
-
     #endregion
 
     #region privatestuff
@@ -65,8 +63,6 @@ public class PlayerCarMovement : MonoBehaviour
 
     private void Suspension()
     {
-        
-
         for (int i = 0; i < susPoints.Length; i++)
         {
             RaycastHit hit;
@@ -122,7 +118,6 @@ public class PlayerCarMovement : MonoBehaviour
     public void OnDrive(InputAction.CallbackContext context)
     {
         speederDown = context.ReadValueAsButton();
-        //Debug.Log(speederDown);
     }
 
     public void OnMove(InputAction.CallbackContext context)
