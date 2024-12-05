@@ -11,8 +11,10 @@ public class PlayerCarMovement : MonoBehaviour
     [SerializeField] AnimationCurve speedCurve;
     [SerializeField] float acceleration;
     [SerializeField] float deceleration;
+    [SerializeField] float decelerationThreshold;
     [SerializeField] float turnSpeed;
-
+    [SerializeField] AnimationCurve turningCurve;
+    [SerializeField] float sideDrag;
 
     [Header("SusStats")]
     [SerializeField] private float springLengthMin;
@@ -25,6 +27,7 @@ public class PlayerCarMovement : MonoBehaviour
     [SerializeField] private Transform[] susPoints; //AMOGUS
     [SerializeField] private LayerMask drivable;
     [SerializeField] private Transform accelerationPoint;
+    [SerializeField] private Transform WheelTransform;
 
     #endregion
 
@@ -33,11 +36,13 @@ public class PlayerCarMovement : MonoBehaviour
     private Rigidbody rb;
 
     private Vector3 steer;
-    private Vector3 velocity;
+
+    private float currentSpeed;
 
     private int[] wheelCheck = new int[4];
     
     private bool speederDown;
+    private bool brakeDown;
     private bool isGrounded;
     
     #endregion
@@ -50,38 +55,77 @@ public class PlayerCarMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-
+        CalculateSpeed();
         Suspension();
         Grounded();
 
         if (isGrounded)
-        {   
+        {
+            AddDrag();
+            Turn();
+
             if (speederDown)
             {
                 Accelerate();
             }
-
+            else if (currentSpeed > decelerationThreshold)
+            {
+                //Decelerate();
+            }
+           
         }
 
     }
 
-    private void Accelerate()
+    private void CalculateSpeed()
     {
         Vector3 accelDir = transform.forward;
 
         float curSpeed = Vector3.Dot(accelDir, rb.linearVelocity);
 
-        float normalizedSped = Mathf.Clamp01(Mathf.Abs(curSpeed) / maxSpeed);
+        currentSpeed = Mathf.Clamp01(Mathf.Abs(curSpeed) / maxSpeed);
 
-        float avaliableTorque = speedCurve.Evaluate(normalizedSped) * acceleration;
+    }
+
+
+    private void Accelerate()
+    {
+        Vector3 accelDir = transform.forward;
+
+        float avaliableTorque = speedCurve.Evaluate(currentSpeed) * acceleration;
 
         rb.AddForceAtPosition(accelDir * avaliableTorque, accelerationPoint.position);
 
+    }
+    private void Decelerate()
+    {
+        float avaliableTorque = speedCurve.Evaluate(currentSpeed) * deceleration;
+
+        rb.AddForceAtPosition(-transform.forward * avaliableTorque, accelerationPoint.position);
+    }
+
+
+    private void Turn()
+    {
+        rb.AddRelativeTorque(turnSpeed * steer.x * turningCurve.Evaluate(currentSpeed) * Mathf.Sign(currentSpeed) * transform.up, ForceMode.Acceleration);
+    }
+
+    private void AddDrag()
+    {
+        float currentSideSpeed = rb.linearVelocity.x;
+
+        float dragPower = -currentSideSpeed * sideDrag;
+
+        Vector3 dragForce = transform.right * dragPower;
+
+        rb.AddForceAtPosition(dragForce, rb.worldCenterOfMass, ForceMode.Acceleration);
     }
 
 
     private void Suspension()
     {
+
+        
         for (int i = 0; i < susPoints.Length; i++)
         {
             RaycastHit hit;
@@ -110,7 +154,9 @@ public class PlayerCarMovement : MonoBehaviour
                 wheelCheck[i] = 0;
                 Debug.DrawLine(susPoints[i].position, susPoints[i].position + (wheelRadius + maxL) * -susPoints[i].up, Color.blue);
             }
-        }
+         }
+         
+
     }
 
     private void Grounded()
@@ -139,9 +185,16 @@ public class PlayerCarMovement : MonoBehaviour
         speederDown = context.ReadValueAsButton();
     }
 
+    public void OnBrake(InputAction.CallbackContext context)
+    {
+        brakeDown = context.ReadValueAsButton();
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         steer = context.ReadValue<Vector3>();
     }
+
+   
 
 }

@@ -16,21 +16,21 @@
                 },
                 {
                     "name": "Drive",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "c57abd80-a3ed-49ec-97df-187c48b9edf2",
-                    "expectedControlType": "",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "Hold",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Brake",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "9c9dd0cd-62a0-4631-9751-8124ae5afcb7",
-                    "expectedControlType": "",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
