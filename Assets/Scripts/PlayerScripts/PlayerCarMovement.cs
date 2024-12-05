@@ -8,9 +8,11 @@ public class PlayerCarMovement : MonoBehaviour
     
     [Header("MovementStats")]
     [SerializeField] float maxSpeed;
+    [SerializeField] AnimationCurve speedCurve;
     [SerializeField] float acceleration;
     [SerializeField] float deceleration;
     [SerializeField] float turnSpeed;
+
 
     [Header("SusStats")]
     [SerializeField] private float springLengthMin;
@@ -56,9 +58,26 @@ public class PlayerCarMovement : MonoBehaviour
 
         if (isGrounded)
         {   
-
+            if (speederDown)
+            {
+                Accelerate();
+            }
 
         }
+
+    }
+
+    private void Accelerate()
+    {
+        Vector3 accelDir = transform.forward;
+
+        float curSpeed = Vector3.Dot(accelDir, rb.linearVelocity);
+
+        float normalizedSped = Mathf.Clamp01(Mathf.Abs(curSpeed) / maxSpeed);
+
+        float avaliableTorque = speedCurve.Evaluate(normalizedSped) * acceleration;
+
+        rb.AddForceAtPosition(accelDir * avaliableTorque, accelerationPoint.position);
 
     }
 
