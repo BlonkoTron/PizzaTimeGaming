@@ -23,22 +23,26 @@ public class Wheel : MonoBehaviour
     [Header("SpeedStats")]
     [SerializeField] float maxSpeed;
     [SerializeField] AnimationCurve speedCurve;
+    [SerializeField] float acceleration;
     [SerializeField] float decceleration;
+    [SerializeField] float brakePower;
 
     [Header("TurnStats")]
-    [SerializeField] float tireGrip;
+    [SerializeField] float turnSpeed;
+    [SerializeField] AnimationCurve tireGrip;
     [SerializeField] float tireMass;
 
     [HideInInspector] public float driveInput = 0;
+    [HideInInspector] public float brakeInput = 0;
     [HideInInspector] public Vector3 steerInput;
 
     private bool isGrounded = false;
-    
+
+    private Vector3 accelDirection;
+
     private void FixedUpdate()
     {
         isGrounded = Suspension();
-
-        Debug.Log(transform.forward);
 
         if (isGrounded)
         {
@@ -47,8 +51,13 @@ public class Wheel : MonoBehaviour
                 Accelerate();
             }
 
-            SlowDown();
+            if (turning)
+            {
                 Turn();
+            }
+            
+            SlowDown();
+            TurnGrip();
         }
 
     }
@@ -82,18 +91,18 @@ public class Wheel : MonoBehaviour
 
     private void Accelerate()
     {
-
-        Vector3 accelDirection = transform.forward;
-
+  
+        accelDirection = transform.forward;
+        
         if (driveInput > 0)
         {
             float carSpeed = Vector3.Dot(carTrans.forward, carRB.linearVelocity);
 
             float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / maxSpeed);
 
-            float availableTorque = speedCurve.Evaluate(normalizedSpeed) * driveInput;
+            float availableTorque = speedCurve.Evaluate(normalizedSpeed) * driveInput + acceleration;
 
-            carRB.AddForceAtPosition(accelDirection * availableTorque, transform.position);
+            carRB.AddForceAtPosition(transform.forward * availableTorque, transform.position);
         }
 
 
@@ -102,18 +111,21 @@ public class Wheel : MonoBehaviour
     private void SlowDown()
     {
              
-        {
             Vector3 tireVel = carRB.GetPointVelocity(transform.position);
 
             float deccelVel = Vector3.Dot(transform.forward, tireVel);
 
-            float velChange = -deccelVel * decceleration;
+            float brakeChange = brakeInput * brakePower;
 
+            float velChange = -deccelVel * decceleration + brakeChange;
+            
+            
+            
             carRB.AddForceAtPosition(transform.forward * velChange, transform.position);
-        }
+        
     }
 
-    private void Turn()
+    private void TurnGrip()
     {
         Vector3 steeringDirection = transform.right;
 
@@ -121,9 +133,37 @@ public class Wheel : MonoBehaviour
 
         float steeringVel = Vector3.Dot(steeringDirection, tireVel);
 
-        float VelChange = -steeringVel * tireGrip;
+        float carSpeed = Vector3.Dot(carTrans.forward, carRB.linearVelocity);
+
+        float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / maxSpeed);
+
+        float curGrip = tireGrip.Evaluate(normalizedSpeed);
+
+        float VelChange = -steeringVel * curGrip;
 
         carRB.AddForceAtPosition(steeringDirection * tireMass * VelChange, transform.position);
+
+    }
+
+    private void Turn()
+    {
+        if (steerInput != Vector3.zero)
+        {
+
+                Vector3 turnDirection = carRB.transform.right * steerInput.x;
+
+                Quaternion toRotation = Quaternion.LookRotation(turnDirection + carRB.transform.forward, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, turnSpeed * Time.fixedDeltaTime);
+
+
+        }
+        else
+        {
+            Quaternion toRotation = Quaternion.LookRotation(carRB.transform.forward, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, turnSpeed * Time.fixedDeltaTime);
+        }
+
+
 
     }
 

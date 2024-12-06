@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class CarInputHandler : MonoBehaviour
 {
     private float driveInput;
+    private float brakeInput;
     private Vector3 steerInput;
 
     [SerializeField] private Wheel[] wheels;
@@ -11,7 +12,12 @@ public class CarInputHandler : MonoBehaviour
     public void OnDrive(InputAction.CallbackContext context)
     {
         driveInput = context.ReadValue<float>();
-        Debug.Log(driveInput);
+        
+    }
+
+    public void OnBrake(InputAction.CallbackContext context)
+    {
+        brakeInput = context.ReadValue<float>();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -24,7 +30,8 @@ public class CarInputHandler : MonoBehaviour
         foreach (Wheel wheel in wheels)
         {
             wheel.driveInput = driveInput;
-            wheel.steerInput = steerInput; 
+            wheel.steerInput = steerInput;
+            wheel.brakeInput = brakeInput;
         }
     }
 
