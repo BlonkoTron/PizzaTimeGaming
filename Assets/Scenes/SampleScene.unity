@@ -764,8 +764,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   decceleration: 0.5
-  tireGrip: 1
-  tireMass: 5
+  tireGrip: 0.5
+  tireMass: 0.1
   driveInput: 0
   steerInput: {x: 0, y: 0, z: 0}
 --- !u!1 &716952171
@@ -1780,7 +1780,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &1636931835
 MonoBehaviour:
@@ -1898,8 +1898,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   decceleration: 0.5
-  tireGrip: 1
-  tireMass: 5
+  tireGrip: 0.5
+  tireMass: 0.1
   driveInput: 0
   steerInput: {x: 0, y: 0, z: 0}
 --- !u!1 &1841294288
@@ -2120,8 +2120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c5b8be90f592148b5784ae071dfa32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drive: 0
-  turning: 0
+  drive: 1
+  turning: 1
   carRB: {fileID: 1636931834}
   carTrans: {fileID: 1636931831}
   drivable:
@@ -2362,8 +2362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c5b8be90f592148b5784ae071dfa32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drive: 0
-  turning: 0
+  drive: 1
+  turning: 1
   carRB: {fileID: 1636931834}
   carTrans: {fileID: 1636931831}
   drivable:

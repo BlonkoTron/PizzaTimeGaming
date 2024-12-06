@@ -46,11 +46,9 @@ public class Wheel : MonoBehaviour
             {
                 Accelerate();
             }
-            
-            if (turning)
-            {
+
+            SlowDown();
                 Turn();
-            }
         }
 
     }
@@ -101,21 +99,19 @@ public class Wheel : MonoBehaviour
 
     }
 
-  /*  private void SlowDown()
+    private void SlowDown()
     {
              
         {
             Vector3 tireVel = carRB.GetPointVelocity(transform.position);
 
-            float deccelVel = Vector3.Dot(accelDirection, tireVel);
+            float deccelVel = Vector3.Dot(transform.forward, tireVel);
 
-            float VelChange = -deccelVel * decceleration;
+            float velChange = -deccelVel * decceleration;
 
-            float desireddeccel = VelChange / Time.fixedDeltaTime;
-
-            carRB.AddForceAtPosition(accelDirection * desireddeccel, transform.position);
+            carRB.AddForceAtPosition(transform.forward * velChange, transform.position);
         }
-    }*/
+    }
 
     private void Turn()
     {
@@ -127,9 +123,7 @@ public class Wheel : MonoBehaviour
 
         float VelChange = -steeringVel * tireGrip;
 
-        float desiredAccel = VelChange / Time.fixedDeltaTime;
-
-        carRB.AddForceAtPosition(steeringDirection * tireMass * desiredAccel, transform.position);
+        carRB.AddForceAtPosition(steeringDirection * tireMass * VelChange, transform.position);
 
     }
 
