@@ -6,6 +6,12 @@ public class DeliveryPoint : MonoBehaviour
     private bool hasEnded;
     private float pickupSpeed = 0.5f;
 
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
+
     private void OnEnable()
     {
         hasEnded = false;

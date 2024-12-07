@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     
     public static GameManager instance;
+
+
 
     [SerializeField] private GameObject[] pickUpPoints;
     [SerializeField] private GameObject[] dropOffPoints;
@@ -28,9 +31,9 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        EnablePickups();
 
         timeLeft = startTime;
+        EnablePickups();
         StartCoroutine(GameTimer());
     }
 
@@ -96,6 +99,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Added Time = " + addedTime);
         timeLeft += addedTime;
     }
+
+
 
     IEnumerator GameTimer()
     {

@@ -4,23 +4,15 @@ using UnityEngine.UIElements;
 public class PickUpPoint : MonoBehaviour
 {
 
-    
-
-    private float baseDeliveryScore;
-
     private float pickupSpeed = 0.5f;
     private float distanceToPoint;
-    private float addedTime;
-
 
     private GameObject DeliveryPoint;
-
-    
-
     private bool hasStarted;
 
     private void OnEnable()
-    {
+    {   
+
         DeliveryPoint = GameManager.instance.GetDeliveryPoint();
 
         hasStarted = false;
