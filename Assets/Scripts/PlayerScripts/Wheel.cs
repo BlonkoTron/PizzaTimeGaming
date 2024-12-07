@@ -111,17 +111,24 @@ public class Wheel : MonoBehaviour
     private void SlowDown()
     {
              
-            Vector3 tireVel = carRB.GetPointVelocity(transform.position);
+        Vector3 tireVel = carRB.GetPointVelocity(transform.position);
 
-            float deccelVel = Vector3.Dot(transform.forward, tireVel);
+        float deccelVel = Vector3.Dot(transform.forward, tireVel);
 
-            float brakeChange = brakeInput * brakePower;
+        float deccelRate;
 
-            float velChange = -deccelVel * decceleration + brakeChange;
-            
-            
-            
-            carRB.AddForceAtPosition(transform.forward * velChange, transform.position);
+        if (brakeInput > 0)
+        {
+            deccelRate = brakePower;
+        }
+        else
+        {
+            deccelRate = decceleration;
+        }
+
+        float velChange = -deccelVel * deccelRate;
+               
+        carRB.AddForceAtPosition(transform.forward * velChange, transform.position);
         
     }
 

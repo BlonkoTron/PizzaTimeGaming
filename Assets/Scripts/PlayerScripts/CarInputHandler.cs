@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public class CarInputHandler : MonoBehaviour
     private float driveInput;
     private float brakeInput;
     private Vector3 steerInput;
+
 
     [SerializeField] private Wheel[] wheels;
 
@@ -27,15 +29,15 @@ public class CarInputHandler : MonoBehaviour
 
     private void Update()
     {
+
         foreach (Wheel wheel in wheels)
         {
             wheel.driveInput = driveInput;
             wheel.steerInput = steerInput;
             wheel.brakeInput = brakeInput;
         }
+
+
     }
-
-
-
 
 }
