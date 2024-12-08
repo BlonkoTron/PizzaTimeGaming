@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] dropOffPoints;
     public Transform[] carWayPoints;
 
-
     [Header("Refrences")]
     [SerializeField] private GameObject PlayerCar;
     [SerializeField] private GameObject Arrow;
@@ -153,12 +152,5 @@ public class GameManager : MonoBehaviour
         EndGame();
         
     }
-    
-    //IEnumerator DeliveryTimer(int addedTime)
-    //{
-
-    //}
-
-
 
 }

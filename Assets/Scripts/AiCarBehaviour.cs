@@ -30,8 +30,6 @@ public class AiCarBehaviour : MonoBehaviour
             }
         }
         
-
-
     }
 
     void Update()
