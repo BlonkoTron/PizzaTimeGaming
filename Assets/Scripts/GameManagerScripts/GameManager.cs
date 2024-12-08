@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GameManager : MonoBehaviour
     [Header("POI")]
     [SerializeField] private GameObject[] pickUpPoints;
     [SerializeField] private GameObject[] dropOffPoints;
+    public Transform[] carWayPoints;
+
 
     [Header("Refrences")]
     [SerializeField] private GameObject PlayerCar;
@@ -23,20 +26,27 @@ public class GameManager : MonoBehaviour
 
     private GameObject currentDeliverySpot;
 
+    private MusicManager musicManager;
+
     private void Awake()
     {
         instance = this;
         timeLeft = startTime;
         PlayerCar.GetComponent<CarInputHandler>().enabled = false;
-        StartCoroutine(CountDown());
+        musicManager = GetComponent<MusicManager>();
     }
 
-
+    private void Start()
+    {
+        StartCoroutine(CountDown());
+        ScoreController.Instance.ResetScore();
+    }
 
     private void StartGame()
     {
         PlayerCar.GetComponent<CarInputHandler>().enabled = true;
         UIController.instance.EnableUI();
+        musicManager.PlayRandomTrack();
         EnablePickups();
         StartCoroutine(GameTimer());
 
@@ -72,7 +82,8 @@ public class GameManager : MonoBehaviour
 
     private void EndGame()
     {
-        Debug.Log("ENDED!");
+        ScoreController.Instance.CheckScore();
+        SceneManager.LoadScene(0);
     }
 
     private void EnablePickups()

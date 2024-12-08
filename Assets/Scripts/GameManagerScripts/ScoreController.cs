@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class ScoreController : MonoBehaviour
@@ -5,15 +6,25 @@ public class ScoreController : MonoBehaviour
 
     public static ScoreController Instance;
 
+    public float highScore;
+
     public float score;
 
     private float deliveryScore = 0;
 
     private void Awake()
     {
-        
-        Instance = this; 
-        ResetScore();
+        if (Instance == null)
+        {
+            Instance = this;
+            ResetScore();
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     public void ResetScore()
@@ -34,6 +45,13 @@ public class ScoreController : MonoBehaviour
         deliveryScore = 0;
     }
 
+    public void CheckScore()
+    {
+        if (score > highScore)
+        {
+            highScore = score;
+        }
+    }
 
 
 }
