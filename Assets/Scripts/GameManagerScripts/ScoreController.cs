@@ -27,8 +27,10 @@ public class ScoreController : MonoBehaviour
     }
 
     public void AddtoTotalScore()
-    {
-        score += deliveryScore;
+    {   
+        int addedScore = Mathf.RoundToInt(deliveryScore);
+
+        score += addedScore;
         deliveryScore = 0;
     }
 
